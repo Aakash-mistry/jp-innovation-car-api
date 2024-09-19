@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BranchRouter = void 0;
+const express_1 = require("express");
+const controller_1 = require("../controller");
+exports.BranchRouter = (0, express_1.Router)();
+exports.BranchRouter.get("/branch/personal", controller_1.BranchController.GetMyBranches);
+exports.BranchRouter.post("/branch/personal", controller_1.BranchController.CreateNewBranch);
+exports.BranchRouter.put("/branch/personal/:id", controller_1.BranchController.UpdateBranch);
+exports.BranchRouter.delete("/branch/personal/:id", controller_1.BranchController.DeleteBranch);
+exports.BranchRouter.get("/role/personal", controller_1.BranchController.GetMyRoles);
+exports.BranchRouter.post("/role/personal", controller_1.BranchController.CreateRole);
+exports.BranchRouter.put("/role/personal/:id", controller_1.BranchController.UpdateRole);
+exports.BranchRouter.delete("/role/personal/:id", controller_1.BranchController.DeleteRole);

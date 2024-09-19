@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TestDriveRouter = void 0;
+const express_1 = require("express");
+const controller_1 = require("../controller");
+exports.TestDriveRouter = (0, express_1.Router)();
+exports.TestDriveRouter.get("/test-drive", controller_1.TestDriveController.getMyTestDrive);
+exports.TestDriveRouter.post("/test-drive", controller_1.TestDriveController.createTestDrive);
+exports.TestDriveRouter.put("/test-drive/:id", controller_1.TestDriveController.updateTestDrive);
+exports.TestDriveRouter.delete("/test-drive/:id", controller_1.TestDriveController.deleteTestDrive);

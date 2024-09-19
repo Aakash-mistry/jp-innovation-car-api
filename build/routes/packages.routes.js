@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PackageRoute = void 0;
+const express_1 = require("express");
+const controller_1 = require("../controller");
+exports.PackageRoute = (0, express_1.Router)();
+exports.PackageRoute.get("/packages", controller_1.PackagesController.getAllPackages);
+exports.PackageRoute.post("/packages", controller_1.PackagesController.createPackages);
+exports.PackageRoute.put("/packages/:id", controller_1.PackagesController.updatePackages);
+exports.PackageRoute.delete("/packages/:id", controller_1.PackagesController.deletePackages);

@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LeadRoute = void 0;
+const express_1 = require("express");
+const controller_1 = require("../controller");
+exports.LeadRoute = (0, express_1.Router)();
+exports.LeadRoute.get("/lead", controller_1.LeadController.getMyLeads);
+exports.LeadRoute.post("/lead", controller_1.LeadController.createNewLeads);
+exports.LeadRoute.put("/lead/:id", controller_1.LeadController.updateLead);
+exports.LeadRoute.delete("/lead/:id", controller_1.LeadController.deleteLead);

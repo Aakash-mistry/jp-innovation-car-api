@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetPassRouter = void 0;
+const express_1 = require("express");
+const controller_1 = require("../controller");
+exports.GetPassRouter = (0, express_1.Router)();
+exports.GetPassRouter.get("/get-pass", controller_1.GetPassController.GetMyPasses);
+exports.GetPassRouter.post("/get-pass", controller_1.GetPassController.CreateGetPass);
+exports.GetPassRouter.put("/get-pass/:id", controller_1.GetPassController.UpdateGetPass);
+exports.GetPassRouter.get("/get-pass/:id", controller_1.GetPassController.getGatePassById);

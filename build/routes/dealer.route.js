@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DealerRoute = void 0;
+const express_1 = require("express");
+const controller_1 = require("../controller");
+const validations_1 = require("../validations");
+const utils_1 = require("../utils");
+exports.DealerRoute = (0, express_1.Router)();
+exports.DealerRoute.get("/dealer", controller_1.DealerController.GetAllDealers);
+exports.DealerRoute.post("/dealer/sign-up", validations_1.DealerSignUpRule, utils_1.Validate, controller_1.DealerController.SignUpDealer);
+exports.DealerRoute.post("/dealer/sign-out", controller_1.DealerController.SignOut);
+exports.DealerRoute.post("/dealer/sign-in", validations_1.DealerSignInRule, utils_1.Validate, controller_1.DealerController.SignInDealer);
+exports.DealerRoute.put("/dealer/:id", controller_1.DealerController.UpdateDealer);
