@@ -15,3 +15,8 @@ export * from "./get-pass.model";
 export * from "./test-drive.model";
 export * from "./car-sell.model";
 export * from "./packages.model";
+export * from "./delivery.model";
+export * from "./feedback.model";
+export * from "./customer.model";
+export * from "./designation.model";
+export * from "./department.model";

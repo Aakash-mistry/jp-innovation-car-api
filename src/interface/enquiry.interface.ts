@@ -11,4 +11,4 @@ export interface IEnquiryProps {
      message: string;
 }
 
-export type EnquiryStatus = "archived" | "draft" | "created";
+export type EnquiryStatus = "archived" | "draft" | "created" | "follow_up";

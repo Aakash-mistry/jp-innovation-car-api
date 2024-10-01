@@ -35,14 +35,10 @@ class CarSellControllers {
                     carModel,
                     carVariant,
                     city,
-                    dealerId,
                     fuelType,
                     kmUsed,
-                    modelYear,
-                    phoneNumber,
                     regState,
                     rtoCode,
-                    thumbnail,
                     // transmission,
                     whenToSell,
                     customer,
@@ -67,12 +63,9 @@ class CarSellControllers {
                     city,
                     fuelType,
                     kmUsed,
-                    modelYear,
-                    phoneNumber,
                     regState,
                     dealerId: verify.id as string,
                     rtoCode,
-                    thumbnail,
                     // transmission,
                     whenToSell,
                     customer,
@@ -82,6 +75,7 @@ class CarSellControllers {
 
                return Ok(res, `${customer.firstName} ${customer.lastName} your request is saved`);
           } catch (err) {
+               console.log(err);
                return this.handleError(res, err);
           }
      };

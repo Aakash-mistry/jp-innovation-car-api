@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IBranchProps, IRoleProps } from "../interface";
+import { IBranchProps } from "../interface";
 
 const BranchSchema = new mongoose.Schema<IBranchProps>(
      {
@@ -22,15 +22,3 @@ const BranchSchema = new mongoose.Schema<IBranchProps>(
 );
 
 export const Branch = mongoose.model("Branch", BranchSchema);
-
-const RoleSchema = new mongoose.Schema<IRoleProps>(
-     {
-          label: { type: mongoose.Schema.Types.String, required: true },
-          dealerId: { type: mongoose.Schema.Types.ObjectId, ref: "Dealer", required: true },
-     },
-     {
-          timestamps: true,
-     },
-);
-
-export const Role = mongoose.model("Role", RoleSchema);

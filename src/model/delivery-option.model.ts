@@ -13,26 +13,16 @@ const DeliverOptionSchema = new mongoose.Schema<IDeliveryOptionProps>(
           stockId: { type: mongoose.Schema.Types.ObjectId, ref: "Stock", required: true },
           options: [
                {
-                    milage: { type: mongoose.Schema.Types.String },
-                    status: { type: mongoose.Schema.Types.String, default: "yes" },
-               },
-               {
-                    engineNo: { type: mongoose.Schema.Types.String },
-                    status: { type: mongoose.Schema.Types.String, default: "yes" },
-               },
-               {
-                    chasis: { type: mongoose.Schema.Types.String },
-                    status: { type: mongoose.Schema.Types.String, default: "yes" },
-               },
-               {
-                    doors: { type: mongoose.Schema.Types.String },
-                    status: { type: mongoose.Schema.Types.String, default: "yes" },
-               },
-               {
-                    bonnet: { type: mongoose.Schema.Types.String },
-                    status: { type: mongoose.Schema.Types.String, default: "yes" },
+                    title: { type: mongoose.Schema.Types.String },
+                    option: [
+                         {
+                              label: { type: mongoose.Schema.Types.String },
+                              status: { type: mongoose.Schema.Types.String, default: "fail" },
+                         },
+                    ],
                },
           ],
+          status: { type: mongoose.Schema.Types.String, default: "in_progress" },
      },
      {
           timestamps: true,

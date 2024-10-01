@@ -1,43 +1,56 @@
 import mongoose from "mongoose";
 
 export interface IStockProps {
-     accessories: string;
-     carExteriorUrl: string[];
-     carInteriorUrl: string[];
-     certificateTitle: string;
-     rc_book: string;
-     puc: string;
-     insurance: string;
-     chaseNo: string;
-     engineNo: string;
-     insuranceExpDate: Date;
-     insuranceType: string;
-     insuranceValidity: string;
-     manufacturingYear: number;
-     mileage: number;
-     registrationNumber: string;
-     registrationType: string;
-     registrationYear: string;
-     salePrice: number;
-     branchId: mongoose.Schema.Types.ObjectId;
-     brandId: mongoose.Schema.Types.ObjectId;
-     cardId: mongoose.Schema.Types.ObjectId;
-     colorId: mongoose.Schema.Types.ObjectId;
-     fuelTypeId: mongoose.Schema.Types.ObjectId;
-     variantId: mongoose.Schema.Types.ObjectId;
-     thumbnailUrl: string;
-     tyresUrl: string[];
-     deaderId: mongoose.Schema.Types.ObjectId;
-     features?: string;
-     sellerComment?: string;
+     // models & variant
+     dealerId: mongoose.Schema.Types.ObjectId;
+     variant: mongoose.Schema.Types.ObjectId;
+     color: mongoose.Schema.Types.ObjectId;
+     model: mongoose.Schema.Types.ObjectId;
+     brand: mongoose.Schema.Types.ObjectId;
+     catalogue: mongoose.Schema.Types.ObjectId;
+
+     // car details
+     carTitle: string;
+     registerDate: string;
+     kmUsed: string;
+     ownerStage: ownerStageType;
      commission: number;
-     customerPrice: number;
-     otherDealerStock?: {
-          dealerPrice: number;
-          addedPrice: number;
-          ownStock: boolean;
-     };
-     status: StockStatusType;
+     stockType: stockType;
+     transmission: string;
+     sellPrice: number;
+     mfgDate: string;
+     beforeSalePrice: number;
+     accessories: string[];
+     features: StockFeatureCategory[];
+     remark: string;
+     registrationType?: string;
+     registrationNo?: string;
+     registrationState?: string;
+     insurance?: string;
+     insuranceType?: InsuranceType;
+     insuranceTPDate?: string;
+     insuranceComDate?: string;
+
+     // docs
+     rcBook: string;
+     puc: string;
+     exterior: string[];
+     interior: string[];
+     tyres: string[];
+     insuranceUrl: string;
+     otherDoc: string;
+     status: StockStatus;
 }
 
-export type StockStatusType = "in_stock" | "out_of_stock" | "ready_for_deliver";
+export type stockType = " park_and_sell" | "commission" | "own" | "other_dealer";
+export type InsuranceType = "third_party" | "comprehensive" | "both";
+export interface Feature {
+     name: string;
+     status: boolean;
+}
+export interface StockFeatureCategory {
+     category: string;
+     features: Feature[];
+}
+export type ownerStageType = "1st" | "2nd" | "3rd" | "4th" | "more then four";
+export type StockStatus = "in_stock" | "booked" | "archived" | "out_of_stock" | "in_garage" | "dispatched_delivery";

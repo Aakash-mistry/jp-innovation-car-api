@@ -12,5 +12,6 @@ BookingRouter.post(
      // Validate,
      BookingController.CreateBooking,
 );
+BookingRouter.get(`/booking/:bookingId`, BookingController.getBookingById);
 BookingRouter.put("/bookings/:bookingId/ledger", BookingController.UpdateLedger);
 BookingRouter.put("/bookings/update/:bookingId", BookingController.UpdateBooking);

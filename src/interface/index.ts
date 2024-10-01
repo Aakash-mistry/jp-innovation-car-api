@@ -16,3 +16,7 @@ export * from "./test-drive.interface";
 export * from "./sell-car.interface";
 export * from "./packages.interface";
 export * from "./auction.interface";
+export * from "./delivery.interface";
+export * from "./feedback.interface";
+export * from "./customer.interface";
+export * from "./designation.interface";

@@ -8,6 +8,7 @@ const TestDriveSchema = new mongoose.Schema<ITestDriveProps>(
           email: { type: mongoose.Schema.Types.String, required: true },
           mobile: { type: mongoose.Schema.Types.String, required: true },
           budgetRange: { type: mongoose.Schema.Types.String, required: true },
+          date: { type: mongoose.Schema.Types.String, required: true },
           dealerId: { type: mongoose.Schema.Types.ObjectId, ref: "Dealer", required: true },
           stockId: { type: mongoose.Schema.Types.ObjectId, ref: "Stock", required: true },
           status: { type: mongoose.Schema.Types.String },
@@ -16,6 +17,7 @@ const TestDriveSchema = new mongoose.Schema<ITestDriveProps>(
                reason: { type: mongoose.Schema.Types.String },
           },
           message: { type: mongoose.Schema.Types.String },
+          license: { type: mongoose.Schema.Types.String },
      },
      {
           timestamps: true,

@@ -29,7 +29,8 @@ class EmployeeControllers {
 
      NewBranchEmployee = async (req: Request, res: Response) => {
           try {
-               const { branchId, email, fullName, image, mobile, password, role }: IBranchEmployeeProps = req.body;
+               const { branchId, email, fullName, image, mobile, password, department }: IBranchEmployeeProps =
+                    req.body;
                const token = req.headers.authorization;
                const verify = verifyToken(token as string);
                const newEmployee = await new BranchEmployee({
@@ -39,8 +40,9 @@ class EmployeeControllers {
                     image,
                     mobile,
                     password,
-                    role,
+                    department,
                     dealerId: verify.id,
+                    available: true,
                }).save();
 
                return Ok(res, `${newEmployee.fullName} is registered`);

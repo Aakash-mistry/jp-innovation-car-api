@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-type DurationType = "1_month" | "3_months" | "6_months" | "12_months";
+export type DurationType = "1_month" | "3_months" | "6_months" | "12_months";
 
 export interface IPackagesProps {
      packageName: string;

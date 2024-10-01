@@ -8,34 +8,34 @@ class StockControllers {
      public GetAllStock = async (req: Request, res: Response) => {
           try {
                const stock = await Stock.find()
-                    .populate("branchId")
-                    .populate("brandId")
-                    .populate("colorId")
-                    .populate("fuelTypeId")
-                    .populate("deaderId")
-                    .populate("variantId")
+                    // .populate("branchId")
+                    .populate("brand")
+                    .populate("color")
+                    .populate("variant")
+
                     .populate({
-                         path: "cardId",
-                         model: "Catalogue",
+                         path: "catalogue",
                          populate: [
                               {
+                                   path: "variants.fuelType",
+                              },
+                              {
+                                   path: "variants.colors",
+                              },
+                              {
                                    path: "carModel",
-                                   model: "Model",
                               },
                               {
-                                   path: "colors",
-                                   model: "Color",
-                              },
-                              {
-                                   path: "fuelType",
-                                   model: "FuelType",
+                                   path: "vehicleSubType",
                               },
                          ],
                     })
+                    .populate("model")
 
                     .sort({ createdAt: -1 });
                return Ok(res, stock);
           } catch (err) {
+               console.log(err);
                return UnAuthorized(res, err as any);
           }
      };
@@ -43,41 +43,38 @@ class StockControllers {
      public GetMyStock = async (req: Request, res: Response) => {
           try {
                const token = req.headers.authorization;
-               const verify = verifyToken(token as string);
-               const stock = await Stock.find({ deaderId: verify.id })
-                    .populate("branchId")
-                    .populate("brandId")
-                    .populate("colorId")
-                    .populate("fuelTypeId")
-                    .populate("deaderId")
-                    .populate("variantId")
+               const verify = verifyToken(
+                    token
+                         ? token
+                         : `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MWY4ZDVhZjYzNDAwNTVkODZkMzhlNCIsImlhdCI6MTcyNzE2MDMwMywiZXhwIjoxNzI3NDE5NTAzfQ.PINPA3xT_kB6f0oyzz_65ZmPWvjZJvElSBudlAuPyQ0`,
+               );
+               const stock = await Stock.find({ dealerId: verify.id })
+                    .sort({ createdAt: -1 })
+                    .populate("brand")
+                    .populate("variant")
+                    .populate("model")
+                    .populate("color")
                     .populate({
-                         path: "cardId",
+                         path: "catalogue",
                          model: "Catalogue",
                          populate: [
                               {
-                                   path: "carModel",
-                                   model: "Model",
+                                   path: "vehicleSubType",
                               },
                               {
-                                   path: "colors",
-                                   model: "Color",
+                                   path: "vehicleType",
                               },
                               {
-                                   path: "fuelType",
-                                   model: "FuelType",
+                                   path: "wheels",
+                              },
+                              {
+                                   path: "variants.fuelType",
                               },
                          ],
-                    })
-
-                    .sort({ createdAt: -1 });
-               for (const item of stock) {
-                    if (!item.status) {
-                         await Stock.findByIdAndUpdate(item._id, { status: "in_stock" });
-                    }
-               }
+                    });
                return Ok(res, stock);
           } catch (err) {
+               console.log(err);
                return UnAuthorized(res, err as unknown as string);
           }
      };
@@ -133,7 +130,7 @@ class StockControllers {
                const token = req.headers.authorization;
                const verify = verifyToken(token as string);
                const currentStock = await Stock.findOne({ _id: req.params.id });
-               if (currentStock?.deaderId !== verify.id) {
+               if (currentStock?.dealerId !== verify.id) {
                     return UnAuthorized(res, SERVER_MESSAGES.ACCESS_DENIED);
                }
                if (currentStock) {

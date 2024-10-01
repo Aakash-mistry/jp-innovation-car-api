@@ -19,58 +19,43 @@ class BookingControllers {
                     return UnAuthorized(res, "Invalid token");
                }
 
-               // Fetch the bookings with populated fields
                const bookings = await Booking.find({ dealerId: verify.id })
-                    .populate([
-                         {
-                              path: "vehicle.vehicleId",
-                              model: "Stock",
-                              populate: [
-                                   { path: "brandId" },
-                                   { path: "colorId" },
-                                   { path: "fuelTypeId" },
-                                   {
-                                        path: "cardId",
-                                        populate: "carModel",
-                                   },
-                                   { path: "variantId" },
-                              ],
-                         },
-                         { path: "vehicle.selectedColor" },
-                    ])
-                    .sort({ createdAt: -1 });
+                    .sort({ createdAt: -1 })
+                    .populate({
+                         path: "vehicle.stockId",
+                         model: "Stock",
+                         populate: [
+                              {
+                                   path: "brand",
+                              },
+                         ],
+                    })
+                    .populate("vehicle.color")
+                    .populate("vehicle.variant")
+                    .populate("vehicle.model");
 
-               // Iterate over each booking to calculate the percentage of "yes" statuses
-               const enrichedBookings = await Promise.all(
-                    bookings.map(async (booking) => {
-                         const deliveryOption = await DeliveryOption.findOne({ bookingId: booking._id });
+               return Ok(res, bookings);
+          } catch (err) {
+               return this.handleError(res, err);
+          }
+     };
 
-                         if (deliveryOption) {
-                              const options = deliveryOption.options || [];
-                              const yesCount = options.reduce((count, option) => {
-                                   return option.status === "yes" ? count + 1 : count;
-                              }, 0);
-                              const percentageOfYes = (yesCount / options.length) * 100;
-
-                              if (percentageOfYes) {
-                                   await Booking.findByIdAndUpdate(
-                                        { _id: deliveryOption._id },
-                                        { $set: { status: "ready_for_deliver" } },
-                                   );
-                              }
-                              return {
-                                   ...booking.toObject(), // Convert Mongoose document to plain object
-                                   percentageOfYes,
-                              };
-                         } else {
-                              return {
-                                   ...booking.toObject(),
-                                   percentageOfYes: null, // No delivery option available
-                              };
-                         }
-                    }),
-               );
-               return Ok(res, enrichedBookings);
+     getBookingById = async (req: Request, res: Response) => {
+          try {
+               const booking = await Booking.findOne({ _id: new ObjectId(req.params.bookingId) })
+                    .populate({
+                         path: "vehicle.stockId",
+                         model: "Stock",
+                         populate: [
+                              {
+                                   path: "brand",
+                              },
+                         ],
+                    })
+                    .populate("vehicle.color")
+                    .populate("vehicle.variant")
+                    .populate("vehicle.model");
+               return Ok(res, booking);
           } catch (err) {
                return this.handleError(res, err);
           }
@@ -112,13 +97,13 @@ class BookingControllers {
                     return UnAuthorized(res, "ledger balance is zero cannot make more entries");
                }
 
-               const correction = (booking?.billing.advanceAmount as number) - newLedgerEntry.credit;
+               const correction = (booking?.billing.balanceAmount as number) - newLedgerEntry.credit;
                const updatedBooking = await Booking.findByIdAndUpdate(
                     bookingId,
                     {
                          $push: { ledger: newLedgerEntry },
                          $set: {
-                              "billing.advanceAmount": correction,
+                              "billing.balanceAmount": correction,
                               status: correction === 0 || correction < 0 ? "ready_for_deliver" : "in_stock",
                          },
                     },
@@ -128,44 +113,8 @@ class BookingControllers {
                if (!updatedBooking) {
                     return NotFound(res, SERVER_MESSAGES.DATA_NOT_EXIST);
                }
-               const defaultOption = {
-                    reason: "",
-                    status: false,
-               };
-               const defaultTitle: string = "none";
-               if (correction === 0 || correction < 0) {
-                    new DeliveryOption({
-                         bookingId: booking?._id,
-                         dealerId: booking?.dealerId,
-                         stockId: booking?.vehicle.vehicleId,
-                         options: [
-                              {
-                                   milage: defaultTitle,
-                                   option: defaultOption,
-                              },
-                              {
-                                   engineNo: defaultTitle,
-                                   option: defaultOption,
-                              },
-                              {
-                                   chasis: defaultTitle,
-                                   option: defaultOption,
-                              },
-                              {
-                                   doors: defaultTitle,
-                                   option: defaultOption,
-                              },
 
-                              {
-                                   bonnet: defaultTitle,
-                                   option: defaultOption,
-                              },
-                         ],
-                    }).save();
-                    return Ok(res, "ledger entry updated");
-               } else {
-                    return Ok(res, "ledger entry updated");
-               }
+               return Ok(res, "ledger entry updated");
           } catch (err) {
                return this.handleError(res, err);
           }

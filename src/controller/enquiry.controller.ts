@@ -3,6 +3,7 @@ import { Ok, UnAuthorized, verifyToken } from "../utils";
 import { Enquiry } from "../model";
 import { IEnquiryProps, SERVER_MESSAGES } from "../interface";
 import { ObjectId } from "mongodb";
+import { populate } from "dotenv";
 
 class EnquiryControllers {
      private handleError(res: Response, err: unknown) {
@@ -15,32 +16,32 @@ class EnquiryControllers {
                const token: string = req.headers.authorization as string;
                const verify = verifyToken(token);
                const enquiry = await Enquiry.find({ dealerId: verify.id })
-                    .sort({ createdAt: -1 })
                     .populate({
                          path: "stockId",
-                         select: "-dealerId",
-                         model: "Stock",
                          populate: [
                               {
-                                   path: "brandId",
+                                   path: "brand",
                               },
                               {
-                                   path: "variantId",
+                                   path: "model",
                               },
                               {
-                                   path: "engineNo",
+                                   path: "variant",
                               },
                               {
-                                   path: "fuelTypeId",
-                              },
-                              {
-                                   path: "cardId",
-                                   populate: "carModel",
+                                   path: "catalogue",
+                                   populate: [
+                                        {
+                                             path: "variants",
+                                        },
+                                   ],
                               },
                          ],
-                    });
+                    })
+                    .sort({ createdAt: -1 });
                return Ok(res, enquiry);
           } catch (err) {
+               console.log(err);
                return this.handleError(res, err);
           }
      };

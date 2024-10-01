@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Ok, UnAuthorized, verifyToken } from "../utils";
 import { Enquiry, FollowUp } from "../model";
 import { IEnquiryProps, IFollowUpProps, SERVER_MESSAGES } from "../interface";
-
+import { ObjectId } from "mongodb";
 class FollowUpControllers {
      private handleError(res: Response, err: unknown) {
           console.log(err);
@@ -14,7 +14,25 @@ class FollowUpControllers {
           try {
                const token: string = req.headers.authorization as string;
                const verify = verifyToken(token);
-               const followUps = await FollowUp.find({ dealerId: verify.id }).populate("enquiryId");
+               const followUps = await FollowUp.find({ dealerId: verify.id })
+                    .populate({
+                         path: "enquiryId",
+                    })
+                    .populate({
+                         path: "stockId",
+                         populate: [
+                              {
+                                   path: "brand",
+                              },
+                              {
+                                   path: "variant",
+                              },
+                              {
+                                   path: "model",
+                              },
+                         ],
+                    })
+                    .sort({ createdAt: -1 });
                return Ok(res, followUps);
           } catch (err) {
                return this.handleError(res, err);
@@ -44,8 +62,17 @@ class FollowUpControllers {
                     stockId,
                     type,
                }).save();
-
+               const updateEnquiryStatus = await Enquiry.findOneAndUpdate(
+                    { _id: new ObjectId(`${enquiryId}`) },
+                    { $set: { status: "follow_up" } },
+               );
+               console.log("====================================");
+               console.log(updateEnquiryStatus);
+               console.log("====================================");
                const newFollow = await FollowUp.findById({ _id: newFollowUp._id }).populate("enquiryId");
+               console.log("====================================");
+               console.log(newFollow);
+               console.log("====================================");
 
                return Ok(res, {
                     message: `${(newFollow?.enquiryId as unknown as IEnquiryProps)?.name} is successfully saved`,

@@ -7,10 +7,10 @@ const DealerSchema = new mongoose.Schema<IDealerProps>(
           name: { type: mongoose.Schema.Types.String, required: true },
           password: { type: mongoose.Schema.Types.String, required: true },
           photo: { type: mongoose.Schema.Types.String },
-          roleId: { type: mongoose.Schema.Types.ObjectId, ref: "Role" },
-          branchId: { type: mongoose.Schema.Types.ObjectId, ref: "Branch" },
+          roleId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
           packageId: { type: mongoose.Schema.Types.ObjectId, ref: "Packages" },
           packageEnd: { type: mongoose.Schema.Types.Date },
+          blocked: { type: mongoose.Schema.Types.Boolean, default: false },
      },
      {
           timestamps: true,

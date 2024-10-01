@@ -5,6 +5,7 @@ export interface ITestDriveProps {
      city: string;
      mobile: string;
      email: string;
+     date: string;
      budgetRange: string;
      dealerId: mongoose.Schema.Types.ObjectId;
      stockId: mongoose.Schema.Types.ObjectId;
@@ -14,4 +15,5 @@ export interface ITestDriveProps {
           reason: string;
      };
      message: string;
+     license?: string;
 }

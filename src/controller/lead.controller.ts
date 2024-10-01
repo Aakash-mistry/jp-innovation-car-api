@@ -17,24 +17,12 @@ class LeadControllers {
                const leads = await Lead.find({ dealerId: verify.id })
                     .populate({
                          path: "interestedVehicle",
-                         select: "-dealerId",
-                         model: "Stock",
                          populate: [
                               {
-                                   path: "brandId",
+                                   path: "brand",
                               },
                               {
-                                   path: "variantId",
-                              },
-                              {
-                                   path: "engineNo",
-                              },
-                              {
-                                   path: "fuelTypeId",
-                              },
-                              {
-                                   path: "cardId",
-                                   populate: "carModel",
+                                   path: "model",
                               },
                          ],
                     })
@@ -46,19 +34,8 @@ class LeadControllers {
      };
      createNewLeads = async (req: Request, res: Response) => {
           try {
-               const {
-                    address,
-                    city,
-                    email,
-                    interestedVehicle,
-                    name,
-                    phone,
-                    source,
-                    state,
-                    zip,
-                    budgetRange,
-                    remark,
-               }: ILeadProps = req.body;
+               const { city, email, interestedVehicle, name, phone, source, budgetRange, remark }: ILeadProps =
+                    req.body;
                const leadExist = await Lead.findOne({ phone, interestedVehicle, email });
 
                if (leadExist) {
@@ -68,15 +45,12 @@ class LeadControllers {
                const token: string = req.headers.authorization as string;
                const verify = verifyToken(token);
                const newLead = await new Lead({
-                    address,
                     city,
                     email,
                     interestedVehicle,
                     name,
                     phone,
                     source,
-                    state,
-                    zip,
                     budgetRange,
                     remark,
                     dealerId: new ObjectId(verify.id),
@@ -91,6 +65,7 @@ class LeadControllers {
      updateLead = async (req: Request, res: Response) => {
           try {
                const updateLead = await Lead.findByIdAndUpdate({ _id: req.params.id }, { $set: { ...req.body } });
+               return Ok(res, "lead updated");
           } catch (err) {
                return this.handleError(res, err);
           }

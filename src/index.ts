@@ -21,6 +21,11 @@ import {
      TestDriveRouter,
      CarSellRoute,
      PackageRoute,
+     DeliveryRoute,
+     FeedbackRoute,
+     CustomerRouter,
+     DesignationRoute,
+     DepartmentRouter,
 } from "./routes";
 import { database } from "./utils";
 import { configDotenv } from "dotenv";
@@ -130,15 +135,19 @@ io.on("connection", async (socket) => {
           console.log("Client disconnected");
      });
 });
+
 app.use(
      cors({
           origin: "*",
      }),
 );
+
+// middlewares
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// routes
 app.use(`${API_ENDPOINT}`, BaseRouter);
 app.use(`${API_ENDPOINT}`, AdminAuthRouter);
 app.use(`${API_ENDPOINT}`, MasterRoute);
@@ -156,6 +165,11 @@ app.use(`${API_ENDPOINT}`, GetPassRouter);
 app.use(`${API_ENDPOINT}`, TestDriveRouter);
 app.use(`${API_ENDPOINT}`, CarSellRoute);
 app.use(`${API_ENDPOINT}`, PackageRoute);
+app.use(`${API_ENDPOINT}`, DeliveryRoute);
+app.use(`${API_ENDPOINT}`, FeedbackRoute);
+app.use(`${API_ENDPOINT}`, CustomerRouter);
+app.use(`${API_ENDPOINT}`, DesignationRoute);
+app.use(`${API_ENDPOINT}`, DepartmentRouter);
 
 app.use(express.json());
 app.use(passport.initialize());
@@ -164,9 +178,7 @@ app.use(passport.initialize());
 app.use(errorHandler);
 app.use(notFoundMiddleware);
 
-database(
-     "mongodb+srv://akaashmistry:kjGDG7QLOjZB0nBf@car-project.aqr9k.mongodb.net/?retryWrites=true&w=majority&appName=car-project",
-);
+database(process.env.DATA_URI as string);
 
 httpServer.listen(port, () => {
      console.log(`car service running on port ${port}`);

@@ -16,3 +16,8 @@ export * from "./get-pass.controller";
 export * from "./test-drive.controller";
 export * from "./car-sell.controller";
 export * from "./package.controller";
+export * from "./delivery.controller";
+export * from "./feedback.controller";
+export * from "./customer.controller";
+export * from "./designation.controller";
+export * from "./department.controller";

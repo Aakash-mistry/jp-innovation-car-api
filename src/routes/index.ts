@@ -15,3 +15,8 @@ export * from "./get-pass.route";
 export * from "./test-drive.routes";
 export * from "./car-sell.routes";
 export * from "./packages.routes";
+export * from "./delivery.routes";
+export * from "./feedback.routes";
+export * from "./customer.routes";
+export * from "./designation.routes";
+export * from "./department.routes";

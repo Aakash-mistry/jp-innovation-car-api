@@ -7,6 +7,7 @@ import { ObjectId } from "mongodb";
 class TestDriveControllers {
      private handleError(res: Response, err: unknown) {
           const message = (err as Error).message || (err as unknown as string);
+          console.log(err);
           return UnAuthorized(res, message);
      }
 
@@ -21,15 +22,16 @@ class TestDriveControllers {
                          model: "Stock",
                          populate: [
                               {
-                                   path: "variantId",
+                                   path: "model",
                               },
                               {
-                                   path: "brandId",
+                                   path: "brand",
                               },
                               {
-                                   path: "cardId",
-                                   model: "Catalogue",
-                                   populate: "carModel",
+                                   path: "variant",
+                              },
+                              {
+                                   path: "catalogue",
                               },
                          ],
                     })
@@ -42,7 +44,8 @@ class TestDriveControllers {
 
      createTestDrive = async (req: Request, res: Response) => {
           try {
-               const { budgetRange, city, email, mobile, name, stockId, message }: ITestDriveProps = req.body;
+               const { budgetRange, city, email, mobile, name, stockId, message, date, dealerId }: ITestDriveProps =
+                    req.body;
                const driveExist = await TestDrive.findOne({ email, mobile });
                if (driveExist) {
                     return UnAuthorized(res, SERVER_MESSAGES.DATA_EXIST);
@@ -51,16 +54,21 @@ class TestDriveControllers {
                const newDrive = await new TestDrive({
                     budgetRange,
                     city,
-                    dealerId: new ObjectId("66cdadcda4e5ac2deea39a64"),
+                    dealerId,
                     email,
+                    date,
                     mobile,
                     name,
                     stockId,
                     message,
                }).save();
 
-               return Ok(res, `${newDrive.name} is created`);
+               return Ok(
+                    res,
+                    `${newDrive.name} your drive is scheduled!  Our Sales Advisor will contact you promptly to confirm your appointment. `,
+               );
           } catch (err) {
+               console.log(err);
                return this.handleError(res, err);
           }
      };
